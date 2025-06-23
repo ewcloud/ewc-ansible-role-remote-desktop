@@ -137,6 +137,14 @@
       - fail2ban
     state: present
 
+- name: SSH - Disallow root SSH access
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: Restart sshd
+
 - name: Gather package facts
   ansible.builtin.package_facts:
     manager: auto
