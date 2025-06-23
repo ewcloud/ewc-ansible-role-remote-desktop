@@ -1,0 +1,2 @@
+---
+repo_powertools: "{{ 'crb' if ansible_facts['distribution_major_version'] >= '9' else 'powertools' }}"
