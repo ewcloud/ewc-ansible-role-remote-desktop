@@ -145,6 +145,15 @@
     state: present
   notify: Restart sshd
 
+- name: Configure /etc/fail2ban/jail.d/ssh.conf
+  ansible.builtin.template:
+    src: ssh.conf.j2
+    dest: /etc/fail2ban/jail.d/ssh.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Restart fail2ban
+
 - name: Gather package facts
   ansible.builtin.package_facts:
     manager: auto

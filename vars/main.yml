@@ -1,2 +1,5 @@
 ---
 repo_powertools: "{{ 'crb' if ansible_facts['distribution_major_version'] >= '9' else 'powertools' }}"
+localhost_ip_ranges: "127.0.0.1/8"
+private_ip_ranges: null
+public_ip_ranges: null
