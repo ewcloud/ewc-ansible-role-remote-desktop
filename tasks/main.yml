@@ -154,6 +154,24 @@
     group: root
   notify: Restart fail2ban
 
+- name: Firewalld - Enabled and restarted
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Fail2ban - Enabled and restarted
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: true
+
+- name: X2gocleansessions - Enabled and started
+  ansible.builtin.service:
+    name: x2gocleansessions
+    state: started
+    enabled: true
+
 - name: Gather package facts
   ansible.builtin.package_facts:
     manager: auto
