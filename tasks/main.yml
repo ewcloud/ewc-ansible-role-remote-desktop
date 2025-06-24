@@ -40,8 +40,6 @@
     - dconf
     - gtk2-engines
     - gvfs
-    - gvfs-afc
-    - gvfs-archive
     - gvfs-fuse
     - gvfs-gphoto2
     - gvfs-mtp
@@ -67,6 +65,17 @@
     - mate-themes
     - xdg-user-dirs-gtk
     - yelp
+
+- name: Install MATE desktop packages (Core, legacy) on RockyLinux 8
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - gvfs-afc
+    - gvfs-archive
+  when:
+    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
 
 - name: Install MATE desktop packages (Default)
   ansible.builtin.dnf:
@@ -109,13 +118,22 @@
     - p7zip
     - p7zip-plugins
     - pluma
-    - rhythmbox
     - seahorse
     - setroubleshoot
     - simple-scan
     - totem
     - transmission-gtk
     - vim-enhanced
+
+- name: Install MATE desktop packages (Default, legacy) on RockyLinux 8
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - rhythmbox
+  when:
+    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
 
 - name: Install MATE desktop packages (Optional)
   ansible.builtin.dnf:
@@ -186,8 +204,6 @@
       - "dconf: {{ ansible_facts.packages['dconf'][0].version }}-{{ ansible_facts.packages['dconf'][0].release }}"
       - "gtk2-engines: {{ ansible_facts.packages['gtk2-engines'][0].version }}-{{ ansible_facts.packages['gtk2-engines'][0].release }}"
       - "gvfs: {{ ansible_facts.packages['gvfs'][0].version }}-{{ ansible_facts.packages['gvfs'][0].release }}"
-      - "gvfs-afc: {{ ansible_facts.packages['gvfs-afc'][0].version }}-{{ ansible_facts.packages['gvfs-afc'][0].release }}"
-      - "gvfs-archive: {{ ansible_facts.packages['gvfs-archive'][0].version }}-{{ ansible_facts.packages['gvfs-archive'][0].release }}"
       - "gvfs-fuse: {{ ansible_facts.packages['gvfs-fuse'][0].version }}-{{ ansible_facts.packages['gvfs-fuse'][0].release }}"
       - "gvfs-gphoto2: {{ ansible_facts.packages['gvfs-gphoto2'][0].version }}-{{ ansible_facts.packages['gvfs-gphoto2'][0].release }}"
       - "gvfs-mtp: {{ ansible_facts.packages['gvfs-mtp'][0].version }}-{{ ansible_facts.packages['gvfs-mtp'][0].release }}"
@@ -247,7 +263,6 @@
       - "p7zip: {{ ansible_facts.packages['p7zip'][0].version }}-{{ ansible_facts.packages['p7zip'][0].release }}"
       - "p7zip-plugins: {{ ansible_facts.packages['p7zip-plugins'][0].version }}-{{ ansible_facts.packages['p7zip-plugins'][0].release }}"
       - "pluma: {{ ansible_facts.packages['pluma'][0].version }}-{{ ansible_facts.packages['pluma'][0].release }}"
-      - "rhythmbox: {{ ansible_facts.packages['rhythmbox'][0].version }}-{{ ansible_facts.packages['rhythmbox'][0].release }}"
       - "seahorse: {{ ansible_facts.packages['seahorse'][0].version }}-{{ ansible_facts.packages['seahorse'][0].release }}"
       - "setroubleshoot: {{ ansible_facts.packages['setroubleshoot'][0].version }}-{{ ansible_facts.packages['setroubleshoot'][0].release }}"
       - "simple-scan: {{ ansible_facts.packages['simple-scan'][0].version }}-{{ ansible_facts.packages['simple-scan'][0].release }}"
@@ -262,3 +277,12 @@
       - "libreoffice: {{ ansible_facts.packages['libreoffice'][0].version }}-{{ ansible_facts.packages['libreoffice'][0].release }}"
       - "firewalld: {{ ansible_facts.packages['firewalld'][0].version }}-{{ ansible_facts.packages['firewalld'][0].release }}"
       - "fail2ban: {{ ansible_facts.packages['fail2ban'][0].version }}-{{ ansible_facts.packages['fail2ban'][0].release }}"
+
+- name: List installed package versions (legacy) on RockyLinux 8
+  ansible.builtin.debug:
+    msg:
+      - "gvfs-afc: {{ ansible_facts.packages['gvfs-afc'][0].version }}-{{ ansible_facts.packages['gvfs-afc'][0].release }}"
+      - "gvfs-archive: {{ ansible_facts.packages['gvfs-archive'][0].version }}-{{ ansible_facts.packages['gvfs-archive'][0].release }}"
+      - "rhythmbox: {{ ansible_facts.packages['rhythmbox'][0].version }}-{{ ansible_facts.packages['rhythmbox'][0].release }}"
+  when:
+    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
