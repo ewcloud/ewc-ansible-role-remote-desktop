@@ -1,4 +1,10 @@
 ---
+- name: Validate user inputs
+  ansible.builtin.assert:
+    that:
+      - repo_powertools in ['crb', 'powertools']
+      - localhost_ip_ranges is string
+
 - name: Verify Rocky Linux distribution and version
   ansible.builtin.assert:
     that:
