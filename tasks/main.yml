@@ -1,0 +1,301 @@
+---
+- name: Validate user inputs
+  ansible.builtin.assert:
+    that:
+      - repo_powertools in ['crb', 'powertools']
+      - localhost_ip_ranges is string
+
+- name: Verify Rocky Linux distribution and version
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['distribution'] == 'Rocky'
+      - ansible_facts['distribution_major_version'] in ['8', '9']
+    fail_msg: "Supports RockyLinux versions 8 or 9. Detected: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}."
+    success_msg: "Running on RockyLinux {{ ansible_facts['distribution_major_version'] }}."
+
+- name: Enable the Extra Packages for Enterprise Linux repository
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Install DNF plugins core
+  ansible.builtin.dnf:
+    name: dnf-plugins-core
+    state: present
+
+- name: Install development tools
+  ansible.builtin.dnf:
+    name: "@Development Tools"
+    state: present
+
+- name: Install X2Go server packages
+  ansible.builtin.dnf:
+    name:
+      - x2goserver
+      - x2goserver-xsession
+    enablerepo: epel,{{ repo_powertools }}
+    state: present
+
+- name: Install MATE desktop packages (Core)
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - caja
+    - dconf
+    - gtk2-engines
+    - gvfs
+    - gvfs-fuse
+    - gvfs-gphoto2
+    - gvfs-mtp
+    - gvfs-smb
+    - libmatekbd
+    - libmateweather
+    - libsecret
+    - marco
+    - mate-backgrounds
+    - mate-control-center
+    - mate-desktop
+    - mate-desktop-libs
+    - mate-icon-theme
+    - mate-media
+    - mate-menus
+    - mate-notification-daemon
+    - mate-panel
+    - mate-polkit
+    - mate-power-manager
+    - mate-session-manager
+    - mate-settings-daemon
+    - mate-system-monitor
+    - mate-themes
+    - xdg-user-dirs-gtk
+    - yelp
+
+- name: Install MATE desktop packages (Core, legacy) on RockyLinux 8
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - gvfs-afc
+    - gvfs-archive
+  when:
+    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
+
+- name: Install MATE desktop packages (Default)
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - NetworkManager
+    - NetworkManager-l2tp
+    - NetworkManager-openconnect
+    - NetworkManager-openvpn
+    - NetworkManager-pptp
+    - brasero
+    - caja-image-converter
+    - caja-open-terminal
+    - caja-sendto
+    - dconf-editor
+    - engrampa
+    - eom
+    - filezilla
+    - firefox
+    - firewall-config
+    - gparted
+    - gucharmap
+    - lightdm
+    - lightdm-gtk
+    - mate-applets
+    - mate-calc
+    - mate-dictionary
+    - mate-disk-usage-analyzer
+    - mate-menus-preferences-category-menu
+    - mate-netspeed
+    - mate-screensaver
+    - mate-screenshot
+    - mate-search-tool
+    - mate-system-log
+    - mate-terminal
+    - mozo
+    - network-manager-applet
+    - p7zip
+    - p7zip-plugins
+    - pluma
+    - seahorse
+    - setroubleshoot
+    - simple-scan
+    - totem
+    - transmission-gtk
+    - vim-enhanced
+
+- name: Install MATE desktop packages (Default, legacy) on RockyLinux 8
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - rhythmbox
+  when:
+    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
+
+- name: Install MATE desktop packages (Optional)
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel,{{ repo_powertools }}
+  loop:
+    - caja-actions
+    - caja-beesu
+    - firewall-applet
+    - mate-sensors-applet
+    - mate-utils
+    - libreoffice
+
+- name: Install security packages
+  ansible.builtin.dnf:
+    name:
+      - firewalld
+      - fail2ban
+    state: present
+
+- name: SSH - Disallow root SSH access
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+  notify: Restart sshd
+
+- name: SSH - Enable Password Authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication yes"
+    state: present
+
+- name: Configure /etc/fail2ban/jail.d/ssh.conf
+  ansible.builtin.template:
+    src: ssh.conf.j2
+    dest: /etc/fail2ban/jail.d/ssh.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Restart fail2ban
+
+- name: Firewalld - Enabled and restarted
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Fail2ban - Enabled and restarted
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: true
+
+- name: X2gocleansessions - Enabled and started
+  ansible.builtin.service:
+    name: x2gocleansessions
+    state: started
+    enabled: true
+
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: List installed package versions
+  ansible.builtin.debug:
+    msg:
+      - "dnf-plugins-core: {{ ansible_facts.packages['dnf-plugins-core'][0].version }}-{{ ansible_facts.packages['dnf-plugins-core'][0].release }}"
+      - "x2goserver: {{ ansible_facts.packages['x2goserver'][0].version }}-{{ ansible_facts.packages['x2goserver'][0].release }}"
+      - "x2goserver-xsession: {{ ansible_facts.packages['x2goserver-xsession'][0].version }}-{{ ansible_facts.packages['x2goserver-xsession'][0].release }}"
+      - "caja: {{ ansible_facts.packages['caja'][0].version }}-{{ ansible_facts.packages['caja'][0].release }}"
+      - "dconf: {{ ansible_facts.packages['dconf'][0].version }}-{{ ansible_facts.packages['dconf'][0].release }}"
+      - "gtk2-engines: {{ ansible_facts.packages['gtk2-engines'][0].version }}-{{ ansible_facts.packages['gtk2-engines'][0].release }}"
+      - "gvfs: {{ ansible_facts.packages['gvfs'][0].version }}-{{ ansible_facts.packages['gvfs'][0].release }}"
+      - "gvfs-fuse: {{ ansible_facts.packages['gvfs-fuse'][0].version }}-{{ ansible_facts.packages['gvfs-fuse'][0].release }}"
+      - "gvfs-gphoto2: {{ ansible_facts.packages['gvfs-gphoto2'][0].version }}-{{ ansible_facts.packages['gvfs-gphoto2'][0].release }}"
+      - "gvfs-mtp: {{ ansible_facts.packages['gvfs-mtp'][0].version }}-{{ ansible_facts.packages['gvfs-mtp'][0].release }}"
+      - "gvfs-smb: {{ ansible_facts.packages['gvfs-smb'][0].version }}-{{ ansible_facts.packages['gvfs-smb'][0].release }}"
+      - "libmatekbd: {{ ansible_facts.packages['libmatekbd'][0].version }}-{{ ansible_facts.packages['libmatekbd'][0].release }}"
+      - "libmateweather: {{ ansible_facts.packages['libmateweather'][0].version }}-{{ ansible_facts.packages['libmateweather'][0].release }}"
+      - "libsecret: {{ ansible_facts.packages['libsecret'][0].version }}-{{ ansible_facts.packages['libsecret'][0].release }}"
+      - "marco: {{ ansible_facts.packages['marco'][0].version }}-{{ ansible_facts.packages['marco'][0].release }}"
+      - "mate-backgrounds: {{ ansible_facts.packages['mate-backgrounds'][0].version }}-{{ ansible_facts.packages['mate-backgrounds'][0].release }}"
+      - "mate-control-center: {{ ansible_facts.packages['mate-control-center'][0].version }}-{{ ansible_facts.packages['mate-control-center'][0].release }}"
+      - "mate-desktop: {{ ansible_facts.packages['mate-desktop'][0].version }}-{{ ansible_facts.packages['mate-desktop'][0].release }}"
+      - "mate-desktop-libs: {{ ansible_facts.packages['mate-desktop-libs'][0].version }}-{{ ansible_facts.packages['mate-desktop-libs'][0].release }}"
+      - "mate-icon-theme: {{ ansible_facts.packages['mate-icon-theme'][0].version }}-{{ ansible_facts.packages['mate-icon-theme'][0].release }}"
+      - "mate-media: {{ ansible_facts.packages['mate-media'][0].version }}-{{ ansible_facts.packages['mate-media'][0].release }}"
+      - "mate-menus: {{ ansible_facts.packages['mate-menus'][0].version }}-{{ ansible_facts.packages['mate-menus'][0].release }}"
+      - "mate-notification-daemon: {{ ansible_facts.packages['mate-notification-daemon'][0].version }}-{{ ansible_facts.packages['mate-notification-daemon'][0].release }}"
+      - "mate-panel: {{ ansible_facts.packages['mate-panel'][0].version }}-{{ ansible_facts.packages['mate-panel'][0].release }}"
+      - "mate-polkit: {{ ansible_facts.packages['mate-polkit'][0].version }}-{{ ansible_facts.packages['mate-polkit'][0].release }}"
+      - "mate-power-manager: {{ ansible_facts.packages['mate-power-manager'][0].version }}-{{ ansible_facts.packages['mate-power-manager'][0].release }}"
+      - "mate-session-manager: {{ ansible_facts.packages['mate-session-manager'][0].version }}-{{ ansible_facts.packages['mate-session-manager'][0].release }}"
+      - "mate-settings-daemon: {{ ansible_facts.packages['mate-settings-daemon'][0].version }}-{{ ansible_facts.packages['mate-settings-daemon'][0].release }}"
+      - "mate-system-monitor: {{ ansible_facts.packages['mate-system-monitor'][0].version }}-{{ ansible_facts.packages['mate-system-monitor'][0].release }}"
+      - "mate-themes: {{ ansible_facts.packages['mate-themes'][0].version }}-{{ ansible_facts.packages['mate-themes'][0].release }}"
+      - "xdg-user-dirs-gtk: {{ ansible_facts.packages['xdg-user-dirs-gtk'][0].version }}-{{ ansible_facts.packages['xdg-user-dirs-gtk'][0].release }}"
+      - "yelp: {{ ansible_facts.packages['yelp'][0].version }}-{{ ansible_facts.packages['yelp'][0].release }}"
+      - "NetworkManager: {{ ansible_facts.packages['NetworkManager'][0].version }}-{{ ansible_facts.packages['NetworkManager'][0].release }}"
+      - "NetworkManager-l2tp: {{ ansible_facts.packages['NetworkManager-l2tp'][0].version }}-{{ ansible_facts.packages['NetworkManager-l2tp'][0].release }}"
+      - "NetworkManager-openconnect: {{ ansible_facts.packages['NetworkManager-openconnect'][0].version }}-{{ ansible_facts.packages['NetworkManager-openconnect'][0].release }}"
+      - "NetworkManager-openvpn: {{ ansible_facts.packages['NetworkManager-openvpn'][0].version }}-{{ ansible_facts.packages['NetworkManager-openvpn'][0].release }}"
+      - "NetworkManager-pptp: {{ ansible_facts.packages['NetworkManager-pptp'][0].version }}-{{ ansible_facts.packages['NetworkManager-pptp'][0].release }}"
+      - "brasero: {{ ansible_facts.packages['brasero'][0].version }}-{{ ansible_facts.packages['brasero'][0].release }}"
+      - "caja-image-converter: {{ ansible_facts.packages['caja-image-converter'][0].version }}-{{ ansible_facts.packages['caja-image-converter'][0].release }}"
+      - "caja-open-terminal: {{ ansible_facts.packages['caja-open-terminal'][0].version }}-{{ ansible_facts.packages['caja-open-terminal'][0].release }}"
+      - "caja-sendto: {{ ansible_facts.packages['caja-sendto'][0].version }}-{{ ansible_facts.packages['caja-sendto'][0].release }}"
+      - "dconf-editor: {{ ansible_facts.packages['dconf-editor'][0].version }}-{{ ansible_facts.packages['dconf-editor'][0].release }}"
+      - "engrampa: {{ ansible_facts.packages['engrampa'][0].version }}-{{ ansible_facts.packages['engrampa'][0].release }}"
+      - "eom: {{ ansible_facts.packages['eom'][0].version }}-{{ ansible_facts.packages['eom'][0].release }}"
+      - "filezilla: {{ ansible_facts.packages['filezilla'][0].version }}-{{ ansible_facts.packages['filezilla'][0].release }}"
+      - "firefox: {{ ansible_facts.packages['firefox'][0].version }}-{{ ansible_facts.packages['firefox'][0].release }}"
+      - "firewall-config: {{ ansible_facts.packages['firewall-config'][0].version }}-{{ ansible_facts.packages['firewall-config'][0].release }}"
+      - "gparted: {{ ansible_facts.packages['gparted'][0].version }}-{{ ansible_facts.packages['gparted'][0].release }}"
+      - "gucharmap: {{ ansible_facts.packages['gucharmap'][0].version }}-{{ ansible_facts.packages['gucharmap'][0].release }}"
+      - "lightdm: {{ ansible_facts.packages['lightdm'][0].version }}-{{ ansible_facts.packages['lightdm'][0].release }}"
+      - "lightdm-gtk: {{ ansible_facts.packages['lightdm-gtk'][0].version }}-{{ ansible_facts.packages['lightdm-gtk'][0].release }}"
+      - "mate-applets: {{ ansible_facts.packages['mate-applets'][0].version }}-{{ ansible_facts.packages['mate-applets'][0].release }}"
+      - "mate-calc: {{ ansible_facts.packages['mate-calc'][0].version }}-{{ ansible_facts.packages['mate-calc'][0].release }}"
+      - "mate-dictionary: {{ ansible_facts.packages['mate-dictionary'][0].version }}-{{ ansible_facts.packages['mate-dictionary'][0].release }}"
+      - "mate-disk-usage-analyzer: {{ ansible_facts.packages['mate-disk-usage-analyzer'][0].version }}-{{ ansible_facts.packages['mate-disk-usage-analyzer'][0].release }}"
+      - "mate-menus-preferences-category-menu: {{ ansible_facts.packages['mate-menus-preferences-category-menu'][0].version }}-{{ ansible_facts.packages['mate-menus-preferences-category-menu'][0].release }}"
+      - "mate-screensaver: {{ ansible_facts.packages['mate-screensaver'][0].version }}-{{ ansible_facts.packages['mate-screensaver'][0].release }}"
+      - "mate-screenshot: {{ ansible_facts.packages['mate-screenshot'][0].version }}-{{ ansible_facts.packages['mate-screenshot'][0].release }}"
+      - "mate-search-tool: {{ ansible_facts.packages['mate-search-tool'][0].version }}-{{ ansible_facts.packages['mate-search-tool'][0].release }}"
+      - "mate-system-log: {{ ansible_facts.packages['mate-system-log'][0].version }}-{{ ansible_facts.packages['mate-system-log'][0].release }}"
+      - "mate-terminal: {{ ansible_facts.packages['mate-terminal'][0].version }}-{{ ansible_facts.packages['mate-terminal'][0].release }}"
+      - "mozo: {{ ansible_facts.packages['mozo'][0].version }}-{{ ansible_facts.packages['mozo'][0].release }}"
+      - "network-manager-applet: {{ ansible_facts.packages['network-manager-applet'][0].version }}-{{ ansible_facts.packages['network-manager-applet'][0].release }}"
+      - "p7zip: {{ ansible_facts.packages['p7zip'][0].version }}-{{ ansible_facts.packages['p7zip'][0].release }}"
+      - "p7zip-plugins: {{ ansible_facts.packages['p7zip-plugins'][0].version }}-{{ ansible_facts.packages['p7zip-plugins'][0].release }}"
+      - "pluma: {{ ansible_facts.packages['pluma'][0].version }}-{{ ansible_facts.packages['pluma'][0].release }}"
+      - "seahorse: {{ ansible_facts.packages['seahorse'][0].version }}-{{ ansible_facts.packages['seahorse'][0].release }}"
+      - "setroubleshoot: {{ ansible_facts.packages['setroubleshoot'][0].version }}-{{ ansible_facts.packages['setroubleshoot'][0].release }}"
+      - "simple-scan: {{ ansible_facts.packages['simple-scan'][0].version }}-{{ ansible_facts.packages['simple-scan'][0].release }}"
+      - "totem: {{ ansible_facts.packages['totem'][0].version }}-{{ ansible_facts.packages['totem'][0].release }}"
+      - "transmission-gtk: {{ ansible_facts.packages['transmission-gtk'][0].version }}-{{ ansible_facts.packages['transmission-gtk'][0].release }}"
+      - "vim-enhanced: {{ ansible_facts.packages['vim-enhanced'][0].version }}-{{ ansible_facts.packages['vim-enhanced'][0].release }}"
+      - "caja-actions: {{ ansible_facts.packages['caja-actions'][0].version }}-{{ ansible_facts.packages['caja-actions'][0].release }}"
+      - "caja-beesu: {{ ansible_facts.packages['caja-beesu'][0].version }}-{{ ansible_facts.packages['caja-beesu'][0].release }}"
+      - "firewall-applet: {{ ansible_facts.packages['firewall-applet'][0].version }}-{{ ansible_facts.packages['firewall-applet'][0].release }}"
+      - "mate-sensors-applet: {{ ansible_facts.packages['mate-sensors-applet'][0].version }}-{{ ansible_facts.packages['mate-sensors-applet'][0].release }}"
+      - "mate-utils: {{ ansible_facts.packages['mate-utils'][0].version }}-{{ ansible_facts.packages['mate-utils'][0].release }}"
+      - "libreoffice: {{ ansible_facts.packages['libreoffice'][0].version }}-{{ ansible_facts.packages['libreoffice'][0].release }}"
+      - "firewalld: {{ ansible_facts.packages['firewalld'][0].version }}-{{ ansible_facts.packages['firewalld'][0].release }}"
+      - "fail2ban: {{ ansible_facts.packages['fail2ban'][0].version }}-{{ ansible_facts.packages['fail2ban'][0].release }}"
+
+- name: List installed package versions (legacy) on RockyLinux 8
+  ansible.builtin.debug:
+    msg:
+      - "gvfs-afc: {{ ansible_facts.packages['gvfs-afc'][0].version }}-{{ ansible_facts.packages['gvfs-afc'][0].release }}"
+      - "gvfs-archive: {{ ansible_facts.packages['gvfs-archive'][0].version }}-{{ ansible_facts.packages['gvfs-archive'][0].release }}"
+      - "rhythmbox: {{ ansible_facts.packages['rhythmbox'][0].version }}-{{ ansible_facts.packages['rhythmbox'][0].release }}"
+  when:
+    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
