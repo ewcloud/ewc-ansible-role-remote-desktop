@@ -169,6 +169,13 @@
     state: present
   notify: Restart sshd
 
+- name: SSH - Enable Password Authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication yes"
+    state: present
+
 - name: Configure /etc/fail2ban/jail.d/ssh.conf
   ansible.builtin.template:
     src: ssh.conf.j2
