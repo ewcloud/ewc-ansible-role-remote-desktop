@@ -2,15 +2,14 @@
 - name: Validate user inputs
   ansible.builtin.assert:
     that:
-      - repo_powertools in ['crb', 'powertools']
       - localhost_ip_ranges is string
 
-- name: Verify Rocky Linux distribution and version
+- name: Verify Linux distribution version
   ansible.builtin.assert:
     that:
       - ansible_facts['distribution'] == 'Rocky'
-      - ansible_facts['distribution_major_version'] in ['8', '9']
-    fail_msg: "Supports RockyLinux versions 8 or 9. Detected: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}."
+      - ansible_facts['distribution_major_version'] in ['8']
+    fail_msg: "Only supports RockyLinux 8. Detected: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}."
     success_msg: "Running on RockyLinux {{ ansible_facts['distribution_major_version'] }}."
 
 - name: Enable the Extra Packages for Enterprise Linux repository
@@ -33,14 +32,14 @@
     name:
       - x2goserver
       - x2goserver-xsession
-    enablerepo: epel,{{ repo_powertools }}
+    enablerepo: epel,powertools
     state: present
 
 - name: Install MATE desktop packages (Core)
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
-    enablerepo: epel,{{ repo_powertools }}
+    enablerepo: epel,powertools
   loop:
     - caja
     - dconf
@@ -71,23 +70,14 @@
     - mate-themes
     - xdg-user-dirs-gtk
     - yelp
-
-- name: Install MATE desktop packages (Core, legacy) on RockyLinux 8
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    state: present
-    enablerepo: epel,{{ repo_powertools }}
-  loop:
     - gvfs-afc
     - gvfs-archive
-  when:
-    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
 
 - name: Install MATE desktop packages (Default)
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
-    enablerepo: epel,{{ repo_powertools }}
+    enablerepo: epel,powertools
   loop:
     - NetworkManager
     - NetworkManager-l2tp
@@ -130,22 +120,13 @@
     - totem
     - transmission-gtk
     - vim-enhanced
-
-- name: Install MATE desktop packages (Default, legacy) on RockyLinux 8
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    state: present
-    enablerepo: epel,{{ repo_powertools }}
-  loop:
     - rhythmbox
-  when:
-    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
 
 - name: Install MATE desktop packages (Optional)
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
-    enablerepo: epel,{{ repo_powertools }}
+    enablerepo: epel,powertools
   loop:
     - caja-actions
     - caja-beesu
@@ -290,12 +271,6 @@
       - "libreoffice: {{ ansible_facts.packages['libreoffice'][0].version }}-{{ ansible_facts.packages['libreoffice'][0].release }}"
       - "firewalld: {{ ansible_facts.packages['firewalld'][0].version }}-{{ ansible_facts.packages['firewalld'][0].release }}"
       - "fail2ban: {{ ansible_facts.packages['fail2ban'][0].version }}-{{ ansible_facts.packages['fail2ban'][0].release }}"
-
-- name: List installed package versions (legacy) on RockyLinux 8
-  ansible.builtin.debug:
-    msg:
       - "gvfs-afc: {{ ansible_facts.packages['gvfs-afc'][0].version }}-{{ ansible_facts.packages['gvfs-afc'][0].release }}"
       - "gvfs-archive: {{ ansible_facts.packages['gvfs-archive'][0].version }}-{{ ansible_facts.packages['gvfs-archive'][0].release }}"
       - "rhythmbox: {{ ansible_facts.packages['rhythmbox'][0].version }}-{{ ansible_facts.packages['rhythmbox'][0].release }}"
-  when:
-    - ansible_facts['distribution'] == 'Rocky' and ansible_facts['distribution_major_version'] == '8'
