@@ -81,7 +81,6 @@ open-source packages onto your desired target host:
 
 | Name | Version | License | Package Info |
 |------|---------|---------|--------------|
-| dnf-plugins-core | 4.0 | GPLv2+ | https://github.com/rpm-software-management/dnf-plugins-core |
 | x2goserver | 4.1 | GPLv2+ | http://www.x2go.org |
 | x2goserver-xsession | 4.1 | GPLv2+ | http://www.x2go.org |
 | caja | 1.26 | GPLv2+ | http://mate-desktop.org |
