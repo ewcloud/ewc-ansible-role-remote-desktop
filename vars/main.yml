@@ -1,2 +1,2 @@
 ---
-whitelist_ip_ranges: ['127.0.0.1']
+whitelist_ip_ranges: null

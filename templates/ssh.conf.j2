@@ -1,4 +1,6 @@
 [sshd]
 enabled = true
+{% if whitelisted_ip_ranges != '' %}
 # Whitelist IP addresses from where incoming traffic is trusted
 ignoreip = {{ whitelisted_ip_ranges | join(' ') }}
+{% endif %}
