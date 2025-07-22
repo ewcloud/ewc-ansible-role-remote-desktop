@@ -1,4 +1,4 @@
 [sshd]
 enabled = true
 # Whitelist IP addresses from where incoming traffic is trusted
-ignoreip = {{ localhost_ip_ranges }} {{ private_ip_ranges }} {{ public_ip_ranges }}
+ignoreip = {{ whitelisted_ip_ranges | join(' ') }}

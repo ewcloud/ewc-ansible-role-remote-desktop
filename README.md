@@ -72,9 +72,7 @@ ansible-playbook -i inventory.yml playbook.yml
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| localhost_ip_ranges | Localhost IP range (in CIDR format) to be whitelisted by Fail2ban | `string` | `"127.0.0.1/8"` | yes |
-| private_ip_ranges | Private IP range or ranges (in CIDR format) to be whitelisted by Fail2ban | `string` | n/a | no |
-| public_ip_ranges | Public IP range or ranges (in CIDR format) to be whitelisted by Fail2ban | `string` | n/a | no |
+| whitelist_ip_ranges | IP ranges (in CIDR format) to be whitelisted in Fail2ban configuration | `list(string)` | n/a | yes |
 
 ## Final Environment
 
