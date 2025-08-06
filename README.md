@@ -5,14 +5,22 @@ This repository contains a configuration template
 to customize your environment in the
 [European Weather Cloud (EWC)](https://europeanweather.cloud/).
 The template is designed to:
-* Configure pre-existing RockyLinux 8 virtual machines such that they: 
+* Configure pre-existing RockyLinux 8.10 virtual machines such that they: 
   * Enable users to operate the remote hosts through a graphical desktop (i.e. a [MATE desktop environment](https://mate-desktop.org/)), over a low or high bandwidth connection.
 
 ## Copyright and License
->💡 No dependencies are distributed as part of this repository.
+Copyright © EUMETSAT 2025.
 
-See the [LICENSE](./LICENSE) file for licensing information as it pertains to
-files in this repository.
+The provided code and instructions are licensed under the [MIT license](./LICENSE).
+They are intended to automate the setup of an environment that includes 
+third-party software components.
+The usage and distribution terms of the resulting environment are 
+subject to the individual licenses of those third-party libraries.
+
+Users are responsible for reviewing and complying with the licenses of
+all third-party components included in the environment.
+
+Contact [EUMETSAT](http://www.eumetsat.int) for details on the usage and distribution terms.
 
 ## Usage
 
@@ -74,12 +82,13 @@ ansible-playbook -i inventory.yml playbook.yml
 |------|-------------|------|---------|----------|
 | whitelist_ip_ranges | IP ranges (in CIDR format) to be whitelisted in Fail2ban configuration. Example: `['10.0.0.0/24']` | `list(string)` | n/a | no |
 
-## Final Environment
+## SW Bill of Materials (SBoM)
+Third-party components used in the resulting environment.
 
-Applying this template will trigger the installation of the following 
-open-source packages onto your desired target host:
+### RockyLinux 8.10 Environment
+The following components will be included in the resulting environment:
 
-| Name | Version | License | Package Info |
+| Component | Version | License | Home URL |
 |------|---------|---------|--------------|
 | x2goserver | 4.1 | GPLv2+ | http://www.x2go.org |
 | x2goserver-xsession | 4.1 | GPLv2+ | http://www.x2go.org |
