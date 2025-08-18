@@ -60,7 +60,7 @@ Then, proceed to create an Ansible Playbook file to load your customizations:
 ```yaml
 # playbook.yml
 ---
-- name: Configure X2Go Server on RockyLinux 8
+- name: Configure X2Go Server on RockyLinux
   hosts: remote_desktop
   become: true
   become_user: root
@@ -82,7 +82,7 @@ ansible-playbook -i inventory.yml playbook.yml
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| whitelist_ip_ranges | IP ranges (in CIDR format) to be whitelisted in Fail2ban configuration. Example: `['10.0.0.0/24']` | `list(string)` | n/a | no |
+| whitelist_ip_ranges | IP ranges (in CIDR format) to be whitelisted in Fail2ban configuration. When in doubt, do not set. Example: `['10.0.0.0/24']` | `list(string)` | n/a | no |
 
 ## SW Bill of Materials (SBoM)
 Third-party components used in the resulting environment.
