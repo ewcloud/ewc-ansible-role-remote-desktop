@@ -5,8 +5,10 @@ This repository contains a configuration template
 to customize your environment in the
 [European Weather Cloud (EWC)](https://europeanweather.cloud/).
 The template is designed to:
-* Configure pre-existing RockyLinux 8.10 virtual machines such that they: 
-  * Enable users to operate the remote hosts through a graphical desktop (i.e. a [MATE desktop environment](https://mate-desktop.org/)), over a low or high bandwidth connection.
+* Configure a pre-existing RockyLinux 8.10 virtual machine, with a minimum
+  recommended 4GB of RAM, such that it:
+  * Enables users to operate the remote hosts through a graphical desktop 
+  (i.e. a [MATE desktop environment](https://mate-desktop.org/)), over a low or high bandwidth connection.
 
 ## Copyright and License
 Copyright © EUMETSAT 2025.
