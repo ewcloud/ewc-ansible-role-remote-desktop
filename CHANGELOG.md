@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.0.0...1.1.0) (2025-09-16)
+
+
+### Features
+
+* Add support for RockyLinux 9.5 ([#2](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/issues/2)) ([feb56eb](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/feb56ebf041a7798e9b7ef3fd46870b861b5aef8))
+
 # 1.0.0 (2025-09-04)
 
 
