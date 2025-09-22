@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.1.0...1.1.1) (2025-09-22)
+
+
+### Bug Fixes
+
+*  Dynamic source defintion for Mate core legacy packages ([#3](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/issues/3)) ([28983aa](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/28983aa5ee860f77a08b498fdc1f09b9c62fbd1f))
+
 # [1.1.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.0.0...1.1.0) (2025-09-16)
 
 
