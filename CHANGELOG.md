@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.1.1...1.2.0) (2025-09-22)
+
+
+### Features
+
+* Fail2Ban input rename for clear user configuration ([#4](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/issues/4)) ([6810f2b](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/6810f2b50fc3f42365f3e3d7ef5866d2492076e1))
+
 ## [1.1.1](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.1.0...1.1.1) (2025-09-22)
 
 
