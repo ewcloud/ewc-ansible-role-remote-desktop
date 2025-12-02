@@ -11,9 +11,9 @@
   ansible.builtin.assert:
     that:
       - ansible_facts['distribution'] == 'Rocky'
-      - ansible_facts['distribution_version'] in  ['8.10', '9.5']
-    fail_msg: "Only supports RockyLinux 8.10 or 9.5. Detected: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}."
-    success_msg: "Running on RockyLinux {{ ansible_facts['distribution_version'] }}."
+      - ansible_facts['distribution_version'] in  ['8', '9']
+    fail_msg: "Only supports RockyLinux 8 or 9. Detected: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_major_version'] }}."
+    success_msg: "Running on RockyLinux {{ ansible_facts['distribution_major_version'] }}."
 
 - name: Enable the Extra Packages for Enterprise Linux repository
   ansible.builtin.dnf:
@@ -30,186 +30,19 @@
     name: "@Development Tools"
     state: present
 
-- name: Pin package versions prior to installation
-  ansible.builtin.set_fact:
-    package_versions:
-      rockylinux_8:
-        fail2ban: fail2ban-1.0.2-3.el8
-        firewalld: firewalld-0.9.11-10.el8_10
-        x2goserver: x2goserver-4.1.0.3-17.el8.1
-        x2goserver-xsession: x2goserver-xsession-4.1.0.3-17.el8.1
-        caja: caja-1.26.2-1.el8
-        dconf: dconf-0.28.0-4.el8
-        gtk2-engines: gtk2-engines-2.20.2-24.el8
-        gvfs: gvfs-1.36.2-18.el8_10
-        gvfs-afc: gvfs-afc-1.36.2-18.el8_10
-        gvfs-archive: gvfs-archive-1.36.2-18.el8_10
-        gvfs-fuse: gvfs-fuse-1.36.2-18.el8_10
-        gvfs-gphoto2: gvfs-gphoto2-1.36.2-18.el8_10
-        gvfs-mtp: gvfs-mtp-1.36.2-18.el8_10
-        gvfs-smb: gvfs-smb-1.36.2-18.el8_10
-        libmatekbd: libmatekbd-1.26.1-1.el8
-        libmateweather: libmateweather-1.26.3-1.el8
-        libsecret: libsecret-0.18.6-1.el8.0.2
-        marco: marco-1.26.2-1.el8
-        mate-backgrounds: mate-backgrounds-1.26.0-2.el8
-        mate-control-center: mate-control-center-1.26.1-1.el8
-        mate-desktop: mate-desktop-1.26.2-1.el8
-        mate-desktop-libs: mate-desktop-libs-1.26.2-1.el8
-        mate-icon-theme: mate-icon-theme-1.26.0-2.el8
-        mate-media: mate-media-1.26.2-1.el8
-        mate-menus: mate-menus-1.26.1-1.el8
-        mate-notification-daemon: mate-notification-daemon-1.26.1-1.el8
-        mate-panel: mate-panel-1.26.4-2.el8
-        mate-polkit: mate-polkit-1.26.1-1.el8
-        mate-power-manager: mate-power-manager-1.26.1-1.el8
-        mate-session-manager: mate-session-manager-1.26.1-1.el8
-        mate-settings-daemon: mate-settings-daemon-1.26.1-1.el8
-        mate-system-monitor: mate-system-monitor-1.26.2-1.el8
-        mate-themes: mate-themes-3.22.24-1.el8
-        xdg-user-dirs-gtk: xdg-user-dirs-gtk-0.10-13.el8
-        yelp: yelp-3.28.1-3.el8_10.1
-        NetworkManager: NetworkManager-1.40.16-18.el8_10
-        NetworkManager-l2tp: NetworkManager-l2tp-1.20.20-1.el8
-        NetworkManager-openconnect: NetworkManager-openconnect-1.2.6-2.el8.1
-        NetworkManager-openvpn: NetworkManager-openvpn-1.8.10-1.el8.1
-        NetworkManager-pptp: NetworkManager-pptp-1.2.8-1.el8.3
-        brasero: brasero-3.12.2-5.el8
-        caja-image-converter: caja-image-converter-1.26.1-3.el8
-        caja-open-terminal: caja-open-terminal-1.26.1-3.el8
-        caja-sendto: caja-sendto-1.26.1-3.el8
-        dconf-editor: dconf-editor-3.28.0-1.el8
-        engrampa: engrampa-1.26.2-1.el8
-        eom: eom-1.26.1-1.el8
-        filezilla: filezilla-3.55.1-1.el8
-        firefox: firefox-128.11.0-1.el8_10
-        firewall-config: firewall-config-0.9.11-10.el8_10
-        gparted: gparted-1.3.1-1.el8
-        gucharmap: gucharmap-12.0.1-1.el8
-        lightdm: lightdm-1.30.0-19.el8
-        lightdm-gtk: lightdm-gtk-2.0.8-4.el8
-        mate-applets: mate-applets-1.26.1-1.el8
-        mate-calc: mate-calc-1.24.2-3.el8
-        mate-dictionary: mate-dictionary-1.26.1-1.el8
-        mate-disk-usage-analyzer: mate-disk-usage-analyzer-1.26.1-1.el8
-        mate-menus-preferences-category-menu: mate-menus-preferences-category-menu-1.26.1-1.el8
-        mate-screensaver: mate-screensaver-1.26.2-1.el8
-        mate-screenshot: mate-screenshot-1.26.1-1.el8
-        mate-search-tool: mate-search-tool-1.26.1-1.el8
-        mate-system-log: mate-system-log-1.26.1-1.el8
-        mate-terminal: mate-terminal-1.26.1-1.el8
-        mozo: mozo-1.26.2-2.el8
-        network-manager-applet: network-manager-applet-1.26.0-1.el8
-        p7zip: p7zip-16.02-31.el8
-        p7zip-plugins: p7zip-plugins-16.02-31.el8
-        pluma: pluma-1.26.1-1.el8
-        seahorse: seahorse-3.20.0-9.el8
-        setroubleshoot: setroubleshoot-3.3.26-6.el8
-        simple-scan: simple-scan-3.36.2.1-1.el8
-        totem: totem-3.26.2-1.el8
-        transmission-gtk: transmission-gtk-3.00-1.el8
-        vim-enhanced: vim-enhanced-8.0.1763-19.el8_6.4
-        rhythmbox: rhythmbox-3.4.2-8.el8
-        caja-actions: caja-actions-1.26.0-2.el8
-        caja-beesu: caja-beesu-1.26.1-3.el8
-        firewall-applet: firewall-applet-0.9.11-10.el8_10
-        mate-sensors-applet: mate-sensors-applet-1.26.0-1.el8
-        mate-utils: mate-utils-1.26.1-1.el8
-        libreoffice: libreoffice-6.4.7.2-19.el8_10
-      rockylinux_9:
-        fail2ban: fail2ban-1.1.0-6.el9
-        firewalld: firewalld-1.3.4-9.el9_5
-        x2goserver: x2goserver-4.1.0.3-17.el9
-        x2goserver-xsession: x2goserver-xsession-4.1.0.3-17.el9
-        caja: caja-1.26.3-1.el9
-        dconf: dconf-0.40.0-6.el9
-        gtk2-engines: gtk2-engines-2.20.2-24.el9
-        gvfs: gvfs-1.48.1-6.el9
-        gvfs-fuse: gvfs-fuse-1.48.1-6.el9
-        gvfs-gphoto2: gvfs-gphoto2-1.48.1-6.el9
-        gvfs-mtp: gvfs-mtp-1.48.1-6.el9
-        gvfs-smb: gvfs-smb-1.48.1-6.el9
-        libmatekbd: libmatekbd-1.26.1-1.el9
-        libmateweather: libmateweather-1.26.3-1.el9
-        libsecret: libsecret-0.20.4-4.el9
-        marco: marco-1.26.2-1.el9
-        mate-backgrounds: mate-backgrounds-1.26.0-2.el9
-        mate-control-center: mate-control-center-1.26.1-1.el9
-        mate-desktop: mate-desktop-1.26.2-1.el9
-        mate-desktop-libs: mate-desktop-libs-1.26.2-1.el9
-        mate-icon-theme: mate-icon-theme-1.26.0-2.el9
-        mate-media: mate-media-1.26.2-1.el9
-        mate-menus: mate-menus-1.26.1-1.el9
-        mate-notification-daemon: mate-notification-daemon-1.26.1-1.el9
-        mate-panel: mate-panel-1.26.4-1.el9
-        mate-polkit: mate-polkit-1.26.1-1.el9
-        mate-power-manager: mate-power-manager-1.26.1-1.el9
-        mate-session-manager: mate-session-manager-1.26.1-1.el9
-        mate-settings-daemon: mate-settings-daemon-1.26.1-1.el9
-        mate-system-monitor: mate-system-monitor-1.26.2-1.el9
-        mate-themes: mate-themes-3.22.24-1.el9
-        xdg-user-dirs-gtk: xdg-user-dirs-gtk-0.10-22.el9
-        yelp: yelp-40.3-2.el9_6.1
-        NetworkManager: NetworkManager-1.48.10-8.el9_5
-        NetworkManager-l2tp: NetworkManager-l2tp-1.20.20-1.el9
-        NetworkManager-openconnect: NetworkManager-openconnect-1.2.6-9.el9
-        NetworkManager-openvpn: NetworkManager-openvpn-1.12.0-2.el9
-        NetworkManager-pptp: NetworkManager-pptp-1.2.8-5.el9
-        brasero: brasero-3.12.2-19.el9
-        caja-image-converter: caja-image-converter-1.26.1-3.el9
-        caja-open-terminal: caja-open-terminal-1.26.1-3.el9
-        caja-sendto: caja-sendto-1.26.1-3.el9
-        dconf-editor: dconf-editor-3.38.3-3.el9
-        engrampa: engrampa-1.26.2-1.el9
-        eom: eom-1.26.1-1.el9
-        filezilla: filezilla-3.60.1-1.el9
-        firefox: firefox-128.13.0-1.el9_6
-        firewall-config: firewall-config-1.3.4-9.el9_5
-        gparted: gparted-1.4.0-1.el9
-        gucharmap: gucharmap-13.0.8-1.el9
-        lightdm: lightdm-1.30.0-19.el9
-        lightdm-gtk: lightdm-gtk-2.0.8-4.el9
-        mate-applets: mate-applets-1.26.1-3.el9
-        mate-calc: mate-calc-1.26.0-2.el9
-        mate-dictionary: mate-dictionary-1.26.1-1.el9
-        mate-disk-usage-analyzer: mate-disk-usage-analyzer-1.26.1-1.el9
-        mate-menus-preferences-category-menu: mate-menus-preferences-category-menu-1.26.1-1.el9
-        mate-screensaver: mate-screensaver-1.26.2-1.el9
-        mate-screenshot: mate-screenshot-1.26.1-1.el9
-        mate-search-tool: mate-search-tool-1.26.1-1.el9
-        mate-system-log: mate-system-log-1.26.1-1.el9
-        mate-terminal: mate-terminal-1.26.1-1.el9
-        mozo: mozo-1.26.2-1.el9
-        network-manager-applet: network-manager-applet-1.26.0-2.el9
-        p7zip: p7zip-16.02-31.el9
-        p7zip-plugins: p7zip-plugins-16.02-31.el9
-        pluma: pluma-1.26.1-1.el9
-        seahorse: seahorse-40.0-2.el9
-        setroubleshoot: setroubleshoot-3.3.32-1.el9
-        simple-scan: simple-scan-40.7-1.el9
-        totem: totem-3.38.2-2.el9
-        transmission-gtk: transmission-gtk-4.0.5-1.1.el9
-        vim-enhanced: vim-enhanced-8.2.2637-21.el9
-        caja-actions: caja-actions-1.26.0-3.el9
-        caja-beesu: caja-beesu-1.26.1-3.el9
-        firewall-applet: firewall-applet-1.3.4-9.el9_5
-        mate-sensors-applet: mate-sensors-applet-1.26.0-2.el9
-        mate-utils: mate-utils-1.26.1-1.el9
-        libreoffice: libreoffice-7.1.8.1-15.el9_5
-
 - name: Install security packages
   ansible.builtin.dnf:
     name:
       - "{{ item }}"
     state: present
-    allow_downgrade: true
+    allow_downgrade: false
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['fail2ban'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['firewalld'] }}"
+    - fail2ban
+    - firewalld
 
 - name: Set dnf package repositories to enable according to distribution version
   ansible.builtin.set_fact:
-    dnf_repos: "{{ 'epel,crb' if ansible_facts['distribution_version'] == '9.5' else 'epel,powertools' }}"
+    dnf_repos: "{{ 'epel,crb' if ansible_facts['distribution_major_version'] == '9' else 'epel,powertools' }}"
 
 - name: Install X2Go server packages
   ansible.builtin.dnf:
@@ -217,130 +50,130 @@
       - "{{ item }}"
     enablerepo: "{{ dnf_repos }}"
     state: present
-    allow_downgrade: true
+    allow_downgrade: false
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['x2goserver'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['x2goserver-xsession'] }}"
+    - x2goserver
+    - x2goserver-xsession
 
 - name: Install MATE desktop packages (Core)
   ansible.builtin.dnf:
     name: "{{ item }}"
     enablerepo: "{{ dnf_repos }}"
     state: present
-    allow_downgrade: true
+    allow_downgrade: false
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['caja'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['dconf'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gtk2-engines'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs-fuse'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs-gphoto2'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs-mtp'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs-smb'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['libmatekbd'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['libmateweather'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['libsecret'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['marco'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-backgrounds'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-control-center'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-desktop'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-desktop-libs'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-icon-theme'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-media'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-menus'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-notification-daemon'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-panel'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-polkit'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-power-manager'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-session-manager'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-settings-daemon'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-system-monitor'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-themes'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['xdg-user-dirs-gtk'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['yelp'] }}"
+    - caja
+    - dconf
+    - gtk2-engines
+    - gvfs
+    - gvfs-fuse
+    - gvfs-gphoto2
+    - gvfs-mtp
+    - gvfs-smb
+    - libmatekbd
+    - libmateweather
+    - libsecret
+    - marco
+    - mate-backgrounds
+    - mate-control-center
+    - mate-desktop
+    - mate-desktop-libs
+    - mate-icon-theme
+    - mate-media
+    - mate-menus
+    - mate-notification-daemon
+    - mate-panel
+    - mate-polkit
+    - mate-power-manager
+    - mate-session-manager
+    - mate-settings-daemon
+    - mate-system-monitor
+    - mate-themes
+    - xdg-user-dirs-gtk
+    - yelp
 
-- name: Install MATE desktop packages (Core, legacy) on RockyLinux 8.10
+- name: Install MATE desktop packages (Core, legacy) on RockyLinux 8
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
     enablerepo: "{{ dnf_repos }}"
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs-afc'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gvfs-archive'] }}"
+    - gvfs-afc
+    - gvfs-archive
   when:
-    - ansible_facts['distribution_version'] == '8.10'
+    - ansible_facts['distribution_major_version'] == '8'
 
 - name: Install MATE desktop packages (Default)
   ansible.builtin.dnf:
     name: "{{ item }}"
     enablerepo: "{{ dnf_repos }}"
     state: present
-    allow_downgrade: true
+    allow_downgrade: false
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['NetworkManager'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['NetworkManager-l2tp'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['NetworkManager-openconnect'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['NetworkManager-openvpn'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['NetworkManager-pptp'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['brasero'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['caja-image-converter'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['caja-open-terminal'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['caja-sendto'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['dconf-editor'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['engrampa'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['eom'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['filezilla'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['firefox'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['firewall-config'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gparted'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['gucharmap'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['lightdm'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['lightdm-gtk'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-applets'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-calc'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-dictionary'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-disk-usage-analyzer'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-menus-preferences-category-menu'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-screensaver'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-screenshot'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-search-tool'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-system-log'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-terminal'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mozo'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['network-manager-applet'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['p7zip'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['p7zip-plugins'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['pluma'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['seahorse'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['setroubleshoot'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['simple-scan'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['totem'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['transmission-gtk'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['vim-enhanced'] }}"
+    - NetworkManager
+    - NetworkManager-l2tp
+    - NetworkManager-openconnect
+    - NetworkManager-openvpn
+    - NetworkManager-pptp
+    - brasero
+    - caja-image-converter
+    - caja-open-terminal
+    - caja-sendto
+    - dconf-editor
+    - engrampa
+    - eom
+    - filezilla
+    - firefox
+    - firewall-config
+    - gparted
+    - gucharmap
+    - lightdm
+    - lightdm-gtk
+    - mate-applets
+    - mate-calc
+    - mate-dictionary
+    - mate-disk-usage-analyzer
+    - mate-menus-preferences-category-menu
+    - mate-screensaver
+    - mate-screenshot
+    - mate-search-tool
+    - mate-system-log
+    - mate-terminal
+    - mozo
+    - network-manager-applet
+    - p7zip
+    - p7zip-plugins
+    - pluma
+    - seahorse
+    - setroubleshoot
+    - simple-scan
+    - totem
+    - transmission-gtk
+    - vim-enhanced
 
-- name: Install MATE desktop packages (Default, legacy) on RockyLinux 8.10
+- name: Install MATE desktop packages (Default, legacy) on RockyLinux 8
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
     enablerepo: "{{ dnf_repos }}"
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['rhythmbox'] }}"
+    - rhythmbox
   when:
-    - ansible_facts['distribution_version'] == '8.10'
+    - ansible_facts['distribution_version'] == '8'
 
 - name: Install MATE desktop packages (Optional)
   ansible.builtin.dnf:
     name: "{{ item }}"
     enablerepo: "{{ dnf_repos }}"
     state: present
-    allow_downgrade: true
+    allow_downgrade: false
   loop:
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['caja-actions'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['caja-beesu'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['firewall-applet'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-sensors-applet'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['mate-utils'] }}"
-    - "{{ package_versions['rockylinux_' + ansible_facts['distribution_major_version']]['libreoffice'] }}"
+    - caja-actions
+    - caja-beesu
+    - firewall-applet
+    - mate-sensors-applet
+    - mate-utils
+    - libreoffice
 
 - name: SSH - Disallow root SSH access
   ansible.builtin.lineinfile:
@@ -378,10 +211,28 @@
     state: started
     enabled: true
 
+- name: Dnf-automatic - Configure upgrade_type
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: "^upgrade_type "
+    line: "upgrade_type = security"
+    state: present
+
+- name: Dnf-automatic - Configure apply_updates
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: "^apply_updates "
+    line: "apply_updates = yes"
+
 - name: X2gocleansessions - Enabled and started
   ansible.builtin.service:
     name: x2gocleansessions
     state: started
+    enabled: true
+
+- name: Dnf-automatic - Enabled and started
+  ansible.builtin.systemd:
+    name: dnf-automatic.timer
     enabled: true
 
 - name: Gather package facts
@@ -470,6 +321,19 @@
       - "libreoffice: {{ ansible_facts.packages['libreoffice'][0].version }}-{{ ansible_facts.packages['libreoffice'][0].release }}"
       - "firewalld: {{ ansible_facts.packages['firewalld'][0].version }}-{{ ansible_facts.packages['firewalld'][0].release }}"
       - "fail2ban: {{ ansible_facts.packages['fail2ban'][0].version }}-{{ ansible_facts.packages['fail2ban'][0].release }}"
-      - "gvfs-afc: {{ 'N/A' if (ansible_facts['distribution_version'] == '9.5') else ansible_facts.packages['gvfs-afc'][0].version + '-' + ansible_facts.packages['gvfs-afc'][0].release }}"
-      - "gvfs-archive: {{ 'N/A' if (ansible_facts['distribution_version'] == '9.5') else ansible_facts.packages['gvfs-archive'][0].version + '-' + ansible_facts.packages['gvfs-archive'][0].release }}"
-      - "rhythmbox: {{ 'N/A' if (ansible_facts['distribution_version'] == '9.5') else ansible_facts.packages['rhythmbox'][0].version + '-' + ansible_facts.packages['rhythmbox'][0].release }}"
+      - "gvfs-afc: {{ 'N/A' if (ansible_facts['distribution_major_version'] == '9') else ansible_facts.packages['gvfs-afc'][0].version + '-' + ansible_facts.packages['gvfs-afc'][0].release }}"
+      - "gvfs-archive: {{ 'N/A' if (ansible_facts['distribution_major_version'] == '9') else ansible_facts.packages['gvfs-archive'][0].version + '-' + ansible_facts.packages['gvfs-archive'][0].release }}"
+      - "rhythmbox: {{ 'N/A' if (ansible_facts['distribution_major_version'] == '9') else ansible_facts.packages['rhythmbox'][0].version + '-' + ansible_facts.packages['rhythmbox'][0].release }}"
+
+- name: Temporary setup Trivy for SBOM auto-generation (standalone binary file at /tmp/trivy)
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /tmp
+    creates: /tmp/trivy
+
+- name: Auto-generate SBOM (SPDX file at /sbom.json)
+  ansible.builtin.command:
+    cmd: ./trivy rootfs --pkg-types os --format spdx-json --output /sbom.json --scanners vuln /
+    chdir: /tmp
+  changed_when: true
