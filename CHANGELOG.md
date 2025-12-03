@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.3.0...1.3.1) (2025-12-03)
+
+
+### Bug Fixes
+
+* Portable bash command for Trivy installation ([2dcaa97](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/2dcaa979c147baa42c66388fda72420c4b3c1971))
+
 # [1.3.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.2.0...1.3.0) (2025-12-03)
 
 
