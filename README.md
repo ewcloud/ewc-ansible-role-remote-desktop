@@ -5,7 +5,7 @@ This repository contains a configuration template
 to customize your environment in the
 [European Weather Cloud (EWC)](https://europeanweather.cloud/).
 The template is designed to:
-* Configure a pre-existing RockyLinux virtual machine, with a minimum
+* Configure a pre-existing virtual machine running RockyLinux version 9 or 8, with a minimum
   recommended 4GB of RAM, such that it:
   * Enables users to operate the remote hosts through a graphical desktop 
   (i.e. a [MATE desktop environment](https://mate-desktop.org/)), over a low or high bandwidth connection.
@@ -82,183 +82,98 @@ ansible-playbook -i inventory.yml playbook.yml
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| fail2ban_whitelist_ip_ranges | IP ranges (in CIDR format) to be whitelisted in Fail2ban configuration. When in doubt, do not set. Example: `['10.0.0.0/24']` | `list(string)` | n/a | no |
+| fail2ban_whitelist_ip_ranges | IP ranges (in CIDR format) to be whitelisted in Fail2ban configuration. When in doubt, set as an empty string. Examples: `''`, `['10.0.0.0/24']` | `list(string)` | n/a | yes |
 
-## SW Bill of Materials (SBoM)
-Third-party components used in the resulting environment.
+## Dependencies
+> 💡 Upon execution, a SBOM (SPDX format) is auto-generated and stored in the VM's file system root directory (see `/sbom.json`).
 
-### RockyLinux 8.10 Environment
-The following components will be included in the resulting environment:
+The following third-party components will be included in the resulting environment:
 
-| Component | Version | License | Home URL |
-|------|---------|---------|--------------|
-| x2goserver | 4.1 | GPLv2+ | http://www.x2go.org |
-| x2goserver-xsession | 4.1 | GPLv2+ | http://www.x2go.org |
-| caja | 1.26 | GPLv2+ | http://mate-desktop.org |
-| dconf | 0.28 | LGPLv2+ | http://live.gnome.org/dconf |
-| gtk2-engines | 2.20 | LGPLv2+ | http://download.gnome.org/sources/gtk-engines |
-| gvfs | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-fuse | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-gphoto2 | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-mtp | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-smb | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| libmatekbd | 1.26 | LGPLv2+ | http://mate-desktop.org |
-| libmateweather | 1.26 | GPLv2+ | http://mate-desktop.org |
-| libsecret | 0.18 | LGPLv2+ | https://wiki.gnome.org/Projects/Libsecret |
-| marco | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-backgrounds | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-control-center | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-desktop | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-desktop-libs | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-icon-theme | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-media | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-menus | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-notification-daemon | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-panel | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-polkit | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-power-manager | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-session-manager | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-settings-daemon | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-system-monitor | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-themes | 3.22 | GPLv2+ | http://mate-desktop.org |
-| xdg-user-dirs-gtk | 0.10 | GPL+ | http://freedesktop.org/wiki/Software/xdg-user-dirs |
-| yelp | 3.28 | LGPLv2+ | https://wiki.gnome.org/Apps/Yelp |
-| NetworkManager | 1.40 | GPLv2+ | https://networkmanager.dev/ |
-| NetworkManager-l2tp | 1.20 | GPLv2+ | https://github.com/nm-l2tp/NetworkManager-l2tp |
-| NetworkManager-openconnect | 1.2 | GPLv2+ | http://www.gnome.org/projects/NetworkManager |
-| NetworkManager-openvpn | 1.8 | GPLv2+ |	http://www.gnome.org/projects/NetworkManager |
-| NetworkManager-pptp | 1.2 | GPLv2+ | http://www.gnome.org/projects/NetworkManager |
-| brasero | 3.12 | GPLv3+ | https://wiki.gnome.org/Apps/Brasero |
-| caja-image-converter | 1.26 | GPLv2+ | http://mate-desktop.org |
-| caja-open-terminal | 1.26 | GPLv2+ | http://mate-desktop.org |
-| caja-sendto | 1.26 | GPLv2+ | http://mate-desktop.org |
-| dconf-editor | 3.28 | LGPLv2+ | https://wiki.gnome.org/Projects/dconf |
-| engrampa | 1.26 | GPLv2+ | http://mate-desktop.org |
-| eom | 1.26 | GPLv2+ | http://mate-desktop.org |
-| filezilla | 3.55 | GPLv2+ | https://filezilla-project.org |
-| firefox | 128.11 | MPLv1.1 | https://www.mozilla.org/firefox |
-| firewall-config | 0.9 | GPLv2+ | http://www.firewalld.org |
-| gparted | 1.3 | GPLv2+ | http://gparted.org |
-| gucharmap | 12.0 | GPLv3+ | https://wiki.gnome.org/Apps/Gucharmap |
-| lightdm | 1.30 | GPLv3+ | https://www.freedesktop.org/wiki/Software/LightDM |
-| lightdm-gtk | 2.0 | GPLv2+ | http://mate-desktop.org |
-| mate-applets | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-calc | 1.24 | GPLv2+ | http://mate-desktop.org |
-| mate-dictionary | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-disk-usage-analyzer | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-menus-preferences-category-menu | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-screensaver | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-screenshot | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-search-tool | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-system-log | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-terminal | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mozo | 1.26 | LGPLv2+ | http://mate-desktop.org |
-| network-manager-applet | 1.26 | GPLv2+ | http://www.gnome.org/projects/NetworkManager |
-| p7zip | 16.2 | LGPLv2 | http://p7zip.sourceforge.net |
-| p7zip-plugins | 16.2 | LGPLv2+ | http://p7zip.sourceforge.net |
-| pluma | 1.26 | GPLv2+ | http://mate-desktop.org |
-| seahorse | 3.20 | GPLv2+ | https://github.com/darkshram/seahorse-caja |
-| setroubleshoot | 3.3 | GPLv2+ | https://gitlab.com/setroubleshoot/framework |
-| simple-scan | 3.36 | GPLv3+ | https://launchpad.net/simple-scan |
-| totem | 3.26 | LGPLv2+ | https://wiki.gnome.org/Apps/Videos |
-| transmission-gtk | 3.0 | MIT | http://www.transmissionbt.com |
-| vim-enhanced | 8.0 | MIT | http://www.vim.org/ |
-| caja-actions | 1.26 | GPLv2+ | https://github.com/raveit65/caja-actions |
-| caja-beesu | 1.26 | GPLv2+ | http://mate-desktop.org |
-| firewall-applet | 0.9 | GPLv2+ | http://www.firewalld.org |
-| mate-sensors-applet | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-utils | 1.26 | GPLv2+ | http://mate-desktop.org |
-| libreoffice | 6.4 | MPLv1.1 | http://www.libreoffice.org |
-| firewalld | 0.9 | GPLv2+ | http://www.firewalld.org |
-| fail2ban | 1.0 | GPLv2+ | http://fail2ban.sourceforge.net |
-| gvfs-afc | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-archive | 1.36 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| rhythmbox | 3.4 | GPLv2+ | https://wiki.gnome.org/Apps/Rhythmbox |
+| Component | Home URL |
+|------|---------|
+ | x2goserver | http://www.x2go.org |
+ | x2goserver-xsession | http://www.x2go.org |
+ | caja | http://mate-desktop.org |
+ | dconf | http://live.gnome.org/dconf |
+ | gtk2-engines | http://download.gnome.org/sources/gtk-engines |
+ | gvfs | https://wiki.gnome.org/Projects/gvfs |
+ | gvfs-fuse | https://wiki.gnome.org/Projects/gvfs |
+ | gvfs-gphoto2 | https://wiki.gnome.org/Projects/gvfs |
+ | gvfs-mtp | https://wiki.gnome.org/Projects/gvfs |
+ | gvfs-smb | https://wiki.gnome.org/Projects/gvfs |
+ | libmatekbd | http://mate-desktop.org |
+ | libmateweather | http://mate-desktop.org |
+ | libsecret | https://wiki.gnome.org/Projects/Libsecret |
+ | marco | http://mate-desktop.org |
+ | mate-backgrounds | http://mate-desktop.org |
+ | mate-control-center | http://mate-desktop.org |
+ | mate-desktop | http://mate-desktop.org |
+ | mate-desktop-libs | http://mate-desktop.org |
+ | mate-icon-theme | http://mate-desktop.org |
+ | mate-media | http://mate-desktop.org |
+ | mate-menus | http://mate-desktop.org |
+ | mate-notification-daemon | http://mate-desktop.org |
+ | mate-panel | http://mate-desktop.org |
+ | mate-polkit | http://mate-desktop.org |
+ | mate-power-manager | http://mate-desktop.org |
+ | mate-session-manager | http://mate-desktop.org |
+ | mate-settings-daemon | http://mate-desktop.org |
+ | mate-system-monitor | http://mate-desktop.org |
+ | mate-themes | http://mate-desktop.org |
+ | xdg-user-dirs-gtk | http://freedesktop.org/wiki/Software/xdg-user-dirs |
+ | yelp | https://wiki.gnome.org/Apps/Yelp |
+ | NetworkManager | https://networkmanager.dev |
+ | NetworkManager-l2tp | https://github.com/nm-l2tp/NetworkManager-l2tp |
+ | NetworkManager-openconnect | http://www.gnome.org/projects/NetworkManager |
+ | NetworkManager-openvpn | http://www.gnome.org/projects/NetworkManager |
+ | NetworkManager-pptp | http://www.gnome.org/projects/NetworkManager |
+ | brasero | https://wiki.gnome.org/Apps/Brasero |
+ | caja-image-converter | http://mate-desktop.org |
+ | caja-open-terminal | http://mate-desktop.org |
+ | caja-sendto | http://mate-desktop.org |
+ | dconf-editor | https://wiki.gnome.org/Projects/dconf |
+ | engrampa | http://mate-desktop.org |
+ | eom | http://mate-desktop.org |
+ | filezilla | https://filezilla-project.org |
+ | firefox | https://www.mozilla.org/firefox |
+ | firewall-config | http://www.firewalld.org |
+ | gparted | http://gparted.org |
+ | gucharmap | https://wiki.gnome.org/Apps/Gucharmap |
+ | lightdm | https://www.freedesktop.org/wiki/Software/LightDM |
+ | lightdm-gtk | http://mate-desktop.org |
+ | mate-applets | http://mate-desktop.org |
+ | mate-calc | http://mate-desktop.org |
+ | mate-dictionary | http://mate-desktop.org |
+ | mate-disk-usage-analyzer | http://mate-desktop.org |
+ | mate-menus-preferences-category-menu | http://mate-desktop.org |
+ | mate-screensaver | http://mate-desktop.org |
+ | mate-screenshot | http://mate-desktop.org |
+ | mate-search-tool | http://mate-desktop.org |
+ | mate-system-log | http://mate-desktop.org |
+ | mate-terminal | http://mate-desktop.org |
+ | mozo | http://mate-desktop.org |
+ | network-manager-applet | http://www.gnome.org/projects/NetworkManager |
+ | p7zip | http://p7zip.sourceforge.net |
+ | p7zip-plugins | http://p7zip.sourceforge.net |
+ | pluma | http://mate-desktop.org |
+ | seahorse | https://github.com/darkshram/seahorse-caja |
+ | setroubleshoot | https://gitlab.com/setroubleshoot/framework |
+ | simple-scan | https://launchpad.net/simple-scan |
+ | totem | https://wiki.gnome.org/Apps/Videos |
+ | transmission-gtk | http://www.transmissionbt.com |
+ | vim-enhanced | http://www.vim.org/ |
+ | caja-actions | https://github.com/raveit65/caja-actions |
+ | caja-beesu | http://mate-desktop.org |
+ | firewall-applet | http://www.firewalld.org |
+ | mate-sensors-applet | http://mate-desktop.org |
+ | mate-utils | http://mate-desktop.org |
+ | libreoffice | http://www.libreoffice.org |
+ | firewalld | http://www.firewalld.org |
+ | fail2ban | http://fail2ban.sourceforge.net |
+ | gvfs-afc (RockyLinux 8 only) | https://wiki.gnome.org/Projects/gvfs |
+ | gvfs-archive (RockyLinux 8 only)| https://wiki.gnome.org/Projects/gvfs |
+ | rhythmbox (RockyLinux 8 only)| https://wiki.gnome.org/Apps/Rhythmbox |
 
-### RockyLinux 9.5 Environment
-The following components will be included in the resulting environment:
-
-| Name | Version | License | Home URL |
-|------|---------|---------|--------------|
-| x2goserver | 4.1 | GPLv2+ | http://www.x2go.org |
-| x2goserver-xsession | 4.1 | GPLv2+ | http://www.x2go.org |
-| caja | 1.26 | GPLv2+ | http://mate-desktop.org |
-| dconf | 0.40 | LGPLv2+ | http://live.gnome.org/dconf |
-| gtk2-engines | 2.20 | LGPLv2+ | http://download.gnome.org/sources/gtk-engines |
-| gvfs | 1.48 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-fuse | 1.48 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-gphoto2 | 1.48 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-mtp | 1.48 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| gvfs-smb | 1.48 | GPLv3 | https://wiki.gnome.org/Projects/gvfs |
-| libmatekbd | 1.26 | LGPLv2+ | http://mate-desktop.org |
-| libmateweather | 1.26 | GPLv2+ | http://mate-desktop.org |
-| libsecret | 0.20 | LGPLv2+ | https://wiki.gnome.org/Projects/Libsecret |
-| marco | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-backgrounds | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-control-center | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-desktop | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-desktop-libs | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-icon-theme | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-media | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-menus | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-notification-daemon | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-panel | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-polkit | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-power-manager | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-session-manager | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-settings-daemon | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-system-monitor | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-themes | 3.22 | GPLv2+ | http://mate-desktop.org |
-| xdg-user-dirs-gtk | 0.10 | GPL+ | http://freedesktop.org/wiki/Software/xdg-user-dirs |
-| yelp | 40.3 | LGPLv2+ | https://wiki.gnome.org/Apps/Yelp |
-| NetworkManager | 1.48 | GPLv2+ | https://networkmanager.dev/ |
-| NetworkManager-l2tp | 1.20 | GPLv2+ | https://github.com/nm-l2tp/NetworkManager-l2tp |
-| NetworkManager-openconnect | 1.2 | GPLv2+ | http://www.gnome.org/projects/NetworkManager |
-| NetworkManager-openvpn | 1.12 | GPLv2+ | http://www.gnome.org/projects/NetworkManager" |
-| NetworkManager-pptp | 1.2 | GPLv2+ | http://www.gnome.org/projects/NetworkManager |
-| brasero | 3.12 | GPLv3+ | https://wiki.gnome.org/Apps/Brasero |
-| caja-image-converter | 1.26 | GPLv2+ | http://mate-desktop.org |
-| caja-open-terminal | 1.26 | GPLv2+ | http://mate-desktop.org |
-| caja-sendto | 1.26 | GPLv2+ | http://mate-desktop.org |
-| dconf-editor | 3.38 | LGPLv2+ | https://wiki.gnome.org/Projects/dconf |
-| engrampa | 1.26 | GPLv2+ | http://mate-desktop.org |
-| eom | 1.26 | GPLv2+ | http://mate-desktop.org |
-| filezilla | 3.60 | GPLv2+ | https://filezilla-project.org |
-| firefox | 128.11 | MPLv1.1 | https://www.mozilla.org/firefox |
-| firewall-config | 1.3 | GPLv2+ | http://www.firewalld.org |
-| gparted | 1.4 | GPLv2+ | http://gparted.org |
-| gucharmap | 13.0 | GPLv3+ | https://wiki.gnome.org/Apps/Gucharmap |
-| lightdm | 1.30 | GPLv3+ | https://www.freedesktop.org/wiki/Software/LightDM |
-| lightdm-gtk | 2.0 | GPLv2+ | http://mate-desktop.org |
-| mate-applets | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-calc | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-dictionary | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-disk-usage-analyzer | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-menus-preferences-category-menu | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-screensaver | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-screenshot | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-search-tool | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-system-log | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-terminal | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mozo | 1.26 | LGPLv2+ | http://mate-desktop.org |
-| network-manager-applet | 1.26 | GPLv2+ | http://www.gnome.org/projects/NetworkManager |
-| p7zip | 16.02 | LGPLv2 | http://p7zip.sourceforge.net |
-| p7zip-plugins | 16.02 | LGPLv2+ | http://p7zip.sourceforge.net |
-| pluma | 1.26 | GPLv2+ | http://mate-desktop.org |
-| seahorse | 40.0 | GPLv2+ | https://github.com/darkshram/seahorse-caja |
-| setroubleshoot | 3.3 | GPLv2+ | https://gitlab.com/setroubleshoot/framework |
-| simple-scan | 40.7 | GPLv3+ | https://launchpad.net/simple-scan |
-| totem | 3.38 | LGPLv2+ | https://wiki.gnome.org/Apps/Videos |
-| transmission-gtk | 4.0 | MIT | http://www.transmissionbt.com |
-| vim-enhanced | 8.2 | MIT | http://www.vim.org/ |
-| caja-actions | 1.26 | GPLv2+ | https://github.com/raveit65/caja-actions |
-| caja-beesu | 1.26 | GPLv2+ | http://mate-desktop.org |
-| firewall-applet | 1.3 | GPLv2+ | http://www.firewalld.org |
-| mate-sensors-applet | 1.26 | GPLv2+ | http://mate-desktop.org |
-| mate-utils | 1.26 | GPLv2+ | http://mate-desktop.org |
-| libreoffice | 7.1 | MPLv1.1 | http://www.libreoffice.org |
-| firewalld | 1.3 | GPLv2+ | http://www.firewalld.org |
-| fail2ban | 1.0 | GPLv2+ | http://fail2ban.sourceforge.net |
 
 ## Changelog
 All notable changes (i.e. fixes, features and breaking changes) are documented 
