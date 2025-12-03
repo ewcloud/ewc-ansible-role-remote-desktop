@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.2.0...1.3.0) (2025-12-03)
+
+
+### Features
+
+* Automated patch rollout and test automation support ([#5](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/issues/5)) ([8a97c5a](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/8a97c5aec04604ebbc4e43231b7ac9eec3c50215))
+
 # [1.2.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.1.1...1.2.0) (2025-09-22)
 
 
