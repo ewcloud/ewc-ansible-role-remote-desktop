@@ -1,6 +1,6 @@
 [sshd]
 enabled = true
-{% if fail2ban_whitelisted_ip_ranges != '' %}
+{% if fail2ban_whitelisted_ip_ranges != '' and fail2ban_whitelisted_ip_ranges is not none %}
 # Whitelist IP addresses from where incoming traffic is trusted
 ignoreip = {{ fail2ban_whitelisted_ip_ranges | join(' ') }}
 {% endif %}
