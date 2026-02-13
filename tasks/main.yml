@@ -2,8 +2,8 @@
 - name: Validate user inputs
   ansible.builtin.assert:
     that:
-      - fail2ban_whitelisted_ip_ranges == '' or (fail2ban_whitelisted_ip_ranges is defined and fail2ban_whitelisted_ip_ranges is iterable and fail2ban_whitelisted_ip_ranges | length > 0)
-      - fail2ban_whitelisted_ip_ranges == '' or (fail2ban_whitelisted_ip_ranges | map('ansible.utils.ipaddr') | list | select | length == fail2ban_whitelisted_ip_ranges | length)
+      - (fail2ban_whitelisted_ip_ranges is none or fail2ban_whitelisted_ip_ranges == '' or fail2ban_whitelisted_ip_ranges == 'None') or (fail2ban_whitelisted_ip_ranges is defined and fail2ban_whitelisted_ip_ranges is iterable and fail2ban_whitelisted_ip_ranges | length > 0)
+      - (fail2ban_whitelisted_ip_ranges is none or fail2ban_whitelisted_ip_ranges == '' or fail2ban_whitelisted_ip_ranges == 'None') or (fail2ban_whitelisted_ip_ranges | map('ansible.utils.ipaddr') | list | select | length == fail2ban_whitelisted_ip_ranges | length)
     fail_msg: "Input validation failed. See README.md for information on required inputs and their format."
     success_msg: "User input configuration is valid."
 
