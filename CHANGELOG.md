@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.3.1...1.3.2) (2026-02-13)
+
+
+### Bug Fixes
+
+* Support nonetype trivial default ([#6](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/issues/6)) ([9aefbd4](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/9aefbd47c12ce7341381cb393586ba43a4cd5c45))
+
 ## [1.3.1](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.3.0...1.3.1) (2025-12-03)
 
 
