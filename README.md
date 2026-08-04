@@ -153,8 +153,6 @@ The following third-party components will be included in the resulting environme
  | mate-terminal | http://mate-desktop.org |
  | mozo | http://mate-desktop.org |
  | network-manager-applet | http://www.gnome.org/projects/NetworkManager |
- | p7zip | http://p7zip.sourceforge.net |
- | p7zip-plugins | http://p7zip.sourceforge.net |
  | pluma | http://mate-desktop.org |
  | seahorse | https://github.com/darkshram/seahorse-caja |
  | setroubleshoot | https://gitlab.com/setroubleshoot/framework |
