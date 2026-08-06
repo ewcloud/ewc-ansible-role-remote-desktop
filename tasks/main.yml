@@ -141,8 +141,6 @@
     - mate-terminal
     - mozo
     - network-manager-applet
-    - p7zip
-    - p7zip-plugins
     - pluma
     - seahorse
     - setroubleshoot
@@ -304,8 +302,6 @@
       - "mate-terminal: {{ ansible_facts.packages['mate-terminal'][0].version }}-{{ ansible_facts.packages['mate-terminal'][0].release }}"
       - "mozo: {{ ansible_facts.packages['mozo'][0].version }}-{{ ansible_facts.packages['mozo'][0].release }}"
       - "network-manager-applet: {{ ansible_facts.packages['network-manager-applet'][0].version }}-{{ ansible_facts.packages['network-manager-applet'][0].release }}"
-      - "p7zip: {{ ansible_facts.packages['p7zip'][0].version }}-{{ ansible_facts.packages['p7zip'][0].release }}"
-      - "p7zip-plugins: {{ ansible_facts.packages['p7zip-plugins'][0].version }}-{{ ansible_facts.packages['p7zip-plugins'][0].release }}"
       - "pluma: {{ ansible_facts.packages['pluma'][0].version }}-{{ ansible_facts.packages['pluma'][0].release }}"
       - "seahorse: {{ ansible_facts.packages['seahorse'][0].version }}-{{ ansible_facts.packages['seahorse'][0].release }}"
       - "setroubleshoot: {{ ansible_facts.packages['setroubleshoot'][0].version }}-{{ ansible_facts.packages['setroubleshoot'][0].release }}"
