@@ -3,6 +3,13 @@
 All notable changes to this project are documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.3.2...1.4.0) (2026-08-06)
+
+
+### Features
+
+* Deprecate p7zip dependency ([#8](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/issues/8)) ([108fd25](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/commit/108fd257c43883928c954cd05a18e956501f2b14))
+
 ## [1.3.2](https://github.com/ewcloud/ewc-ansible-role-remote-desktop/compare/1.3.1...1.3.2) (2026-02-13)
 
 
